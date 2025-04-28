@@ -5,5 +5,10 @@
     <body>
         <h1>Mis Tareas</h1>
         <p> Mi tarea pendiente es: {{ t }}</p>
+        <ul>
+            {%for tarea in t%}
+                <li>{{ tarea }} </li>
+            {% endfor %}
+        </ul>
     </body>
 </html>

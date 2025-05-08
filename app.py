@@ -37,13 +37,13 @@ def signup():
         nombre = request.form['nombre']
         correo = request.form['correo']
         contrasena = request.form['contrasena']
-        if Usuario.query.filter_by(correo=correo).fist():
+        if Usuario.query.filter_by(correo=correo).first():
             return "El correo ya esta registrado."
         else:
             nuevo_usuario = Usuario(nombre=nombre, correo=correo)
             nuevo_usuario.colocar_contrasena(contrasena)
             db.session.add(nuevo_usuario)
-            db.session.commint()
+            db.session.commit()
             return redirect(url_for('login'))
     return render_template('signup.html')
 
@@ -53,7 +53,7 @@ def about():
 
 @app.route('/tasks')
 def list_tasks():
-    tareas = ["Lavar la ropa", "Limpiar la casa", "Hacer la compra", "Estudiar para el examen", "Hacer ejercicio", "Leer un libro"]
+    tareas = Tarea.query.filter_by(usuario_id=session["usuario_id"]).all()
     return render_template('tasks.html', tareas=tareas)
 
 @app.route('/task')
@@ -65,6 +65,10 @@ def create_task():
     return render_template('create_task.html')
 #Crear una ruta y la vista correspondiente para renderizar un html llamado "create_task.html"
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('home')) 
 
 
 if __name__ == '__main__':
